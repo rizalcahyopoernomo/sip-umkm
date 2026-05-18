@@ -1,0 +1,153 @@
+{% extends "base_auth.html" %}
+
+{% block title %}
+SIP-UMKM | Login
+{% endblock %}
+
+{% block auth_content %}
+
+<div class="login-container" id="login-container">
+
+    <!-- =========================
+         CASHIER LOGIN
+    ========================== -->
+    <div class="form-container sign-up">
+
+        <form
+            method="POST"
+            action="{{ url_for('auth.login') }}"
+        >
+
+            <h1>
+                <i class="fas fa-cash-register"></i>
+                Cashier Login
+            </h1>
+
+            <span>
+                Silakan layani pelanggan dengan senyum terbaik
+            </span>
+
+            <input
+                type="text"
+                name="username"
+                placeholder="Username Kasir"
+                required
+            >
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Password Kasir"
+                required
+            >
+
+            <button type="submit">
+                Masuk Kasir
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- =========================
+         OWNER LOGIN
+    ========================== -->
+    <div class="form-container sign-in">
+
+        <form
+            method="POST"
+            action="{{ url_for('auth.login') }}"
+        >
+
+            <h1>
+                <i class="fas fa-chart-line"></i>
+                Owner Login
+            </h1>
+
+            <span>
+                Pantau performa bisnis dan analisis data
+            </span>
+
+            <input
+                type="text"
+                name="username"
+                placeholder="Username Owner"
+                required
+            >
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Password Owner"
+                required
+            >
+
+            <button type="submit">
+                Masuk Owner
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- =========================
+         TOGGLE PANEL
+    ========================== -->
+    <div class="toggle-container">
+
+        <div class="toggle">
+
+            <!-- LEFT -->
+            <div class="toggle-panel toggle-left">
+
+                <h1>
+                    Halo, Owner!
+                </h1>
+
+                <p>
+                    Klik di bawah untuk masuk
+                    ke dashboard pemilik
+                </p>
+
+                <button
+                    type="button"
+                    class="hidden"
+                    id="to-owner"
+                >
+                    Pindah ke Owner
+                </button>
+
+            </div>
+
+
+            <!-- RIGHT -->
+            <div class="toggle-panel toggle-right">
+
+                <h1>
+                    Selamat Bekerja!
+                </h1>
+
+                <p>
+                    Silakan klik di bawah
+                    untuk mulai transaksi kasir
+                </p>
+
+                <button
+                    type="button"
+                    class="hidden"
+                    id="to-cashier"
+                >
+                    Pindah ke Kasir
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

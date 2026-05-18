@@ -1,0 +1,119 @@
+{% extends "owner/base_owner.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- TITLE -->
+    <div class="mb-4">
+        <h3 class="fw-bold">Stock History</h3>
+        <p class="text-muted small">Riwayat pergerakan stok produk</p>
+    </div>
+
+    <!-- ========================= -->
+    <!-- 🔥 SUMMARY -->
+    <!-- ========================= -->
+    <div class="row mb-4">
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 rounded-4 p-3">
+                <h6 class="text-muted">Total Stock IN</h6>
+                <h4 class="fw-bold text-success">
+                    {{ history | selectattr('type', 'equalto', 'IN') | map(attribute='qty') | sum }}
+                </h4>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 rounded-4 p-3">
+                <h6 class="text-muted">Total Stock OUT</h6>
+                <h4 class="fw-bold text-danger">
+                    {{ history | selectattr('type', 'equalto', 'OUT') | map(attribute='qty') | sum }}
+                </h4>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 rounded-4 p-3">
+                <h6 class="text-muted">Net Movement</h6>
+                <h4 class="fw-bold text-primary">
+                    {{
+                        (history | selectattr('type', 'equalto', 'IN') | map(attribute='qty') | sum)
+                        -
+                        (history | selectattr('type', 'equalto', 'OUT') | map(attribute='qty') | sum)
+                    }}
+                </h4>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- 🔥 TABLE -->
+    <!-- ========================= -->
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body">
+
+            <table class="table align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Tanggal</th>
+                        <th>Type</th>
+                        <th>Qty</th>
+                        <th>Catatan</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for h in history %}
+                    <tr>
+
+                        <!-- DATE -->
+                        <td class="text-muted">
+                            {{ h.created_at.strftime('%d %b %Y, %H:%M') }}
+                        </td>
+
+                        <!-- TYPE -->
+                        <td>
+                            {% if h.type == 'IN' %}
+                                <span class="badge bg-success px-3 py-2">
+                                    ⬆ IN
+                                </span>
+                            {% else %}
+                                <span class="badge bg-danger px-3 py-2">
+                                    ⬇ OUT
+                                </span>
+                            {% endif %}
+                        </td>
+
+                        <!-- QTY -->
+                        <td class="fw-bold">
+                            {{ h.qty }}
+                        </td>
+
+                        <!-- NOTE -->
+                        <td class="text-muted">
+                            {{ h.note or '-' }}
+                        </td>
+
+                    </tr>
+                    {% endfor %}
+
+                    {% if not history %}
+                    <tr>
+                        <td colspan="4" class="text-center text-muted py-4">
+                            Tidak ada data pergerakan stok
+                        </td>
+                    </tr>
+                    {% endif %}
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

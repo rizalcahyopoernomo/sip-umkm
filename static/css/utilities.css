@@ -1,0 +1,438 @@
+/* =========================================
+   UTILITIES CSS
+========================================= */
+
+
+/* =========================================
+   SHADOW
+========================================= */
+
+.shadow-soft {
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,0.06);
+}
+
+.shadow-medium {
+
+    box-shadow:
+        0 12px 24px rgba(0,0,0,0.10);
+}
+
+.shadow-heavy {
+
+    box-shadow:
+        0 20px 40px rgba(0,0,0,0.16);
+}
+
+
+/* =========================================
+   BORDER RADIUS
+========================================= */
+
+.rounded-sm {
+
+    border-radius: 8px;
+}
+
+.rounded-md {
+
+    border-radius: 12px;
+}
+
+.rounded-lg {
+
+    border-radius: 18px;
+}
+
+.rounded-xl {
+
+    border-radius: 24px;
+}
+
+.rounded-full {
+
+    border-radius: 999px;
+}
+
+
+/* =========================================
+   TRANSITION
+========================================= */
+
+.transition-fast {
+
+    transition: all 0.2s ease;
+}
+
+.transition-medium {
+
+    transition: all 0.3s ease;
+}
+
+.transition-slow {
+
+    transition: all 0.5s ease;
+}
+
+
+/* =========================================
+   FLEX
+========================================= */
+
+.flex-center {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+.flex-between {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+.flex-column {
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+.flex-wrap {
+
+    display: flex;
+
+    flex-wrap: wrap;
+}
+
+.flex-gap-sm {
+
+    gap: 8px;
+}
+
+.flex-gap-md {
+
+    gap: 14px;
+}
+
+.flex-gap-lg {
+
+    gap: 20px;
+}
+
+
+/* =========================================
+   TEXT
+========================================= */
+
+.text-muted-soft {
+
+    color: #6b7280;
+}
+
+.text-dark-soft {
+
+    color: #111827;
+}
+
+.text-center {
+
+    text-align: center;
+}
+
+.text-right {
+
+    text-align: right;
+}
+
+.text-left {
+
+    text-align: left;
+}
+
+.fw-medium {
+
+    font-weight: 500;
+}
+
+.fw-semibold {
+
+    font-weight: 600;
+}
+
+.fw-bold {
+
+    font-weight: 700;
+}
+
+.fw-extra-bold {
+
+    font-weight: 800;
+}
+
+
+/* =========================================
+   SPACING - MARGIN
+========================================= */
+
+.m-0 {
+
+    margin: 0;
+}
+
+.mt-sm {
+
+    margin-top: 8px;
+}
+
+.mt-md {
+
+    margin-top: 16px;
+}
+
+.mt-lg {
+
+    margin-top: 24px;
+}
+
+.mt-xl {
+
+    margin-top: 32px;
+}
+
+.mb-sm {
+
+    margin-bottom: 8px;
+}
+
+.mb-md {
+
+    margin-bottom: 16px;
+}
+
+.mb-lg {
+
+    margin-bottom: 24px;
+}
+
+.mb-xl {
+
+    margin-bottom: 32px;
+}
+
+
+/* =========================================
+   SPACING - PADDING
+========================================= */
+
+.p-sm {
+
+    padding: 8px;
+}
+
+.p-md {
+
+    padding: 16px;
+}
+
+.p-lg {
+
+    padding: 24px;
+}
+
+.p-xl {
+
+    padding: 32px;
+}
+
+.px-md {
+
+    padding-left: 16px;
+
+    padding-right: 16px;
+}
+
+.py-md {
+
+    padding-top: 16px;
+
+    padding-bottom: 16px;
+}
+
+
+/* =========================================
+   WIDTH
+========================================= */
+
+.w-100 {
+
+    width: 100%;
+}
+
+.h-100 {
+
+    height: 100%;
+}
+
+.max-w-sm {
+
+    max-width: 400px;
+}
+
+.max-w-md {
+
+    max-width: 768px;
+}
+
+.max-w-lg {
+
+    max-width: 1200px;
+}
+
+
+/* =========================================
+   DISPLAY
+========================================= */
+
+.d-none {
+
+    display: none;
+}
+
+.d-block {
+
+    display: block;
+}
+
+.d-inline-block {
+
+    display: inline-block;
+}
+
+
+/* =========================================
+   OVERFLOW
+========================================= */
+
+.overflow-hidden {
+
+    overflow: hidden;
+}
+
+.overflow-auto {
+
+    overflow: auto;
+}
+
+
+/* =========================================
+   CURSOR
+========================================= */
+
+.cursor-pointer {
+
+    cursor: pointer;
+}
+
+
+/* =========================================
+   BACKGROUND
+========================================= */
+
+.bg-white {
+
+    background: #ffffff;
+}
+
+.bg-light {
+
+    background: #f9fafb;
+}
+
+.bg-dark {
+
+    background: #111827;
+
+    color: white;
+}
+
+
+/* =========================================
+   BORDER
+========================================= */
+
+.border-soft {
+
+    border:
+        1px solid #e5e7eb;
+}
+
+.border-none {
+
+    border: none;
+}
+
+
+/* =========================================
+   POSITION
+========================================= */
+
+.position-relative {
+
+    position: relative;
+}
+
+.position-absolute {
+
+    position: absolute;
+}
+
+.position-fixed {
+
+    position: fixed;
+}
+
+
+/* =========================================
+   HOVER EFFECT
+========================================= */
+
+.hover-lift:hover {
+
+    transform: translateY(-3px);
+}
+
+.hover-opacity:hover {
+
+    opacity: 0.85;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 768px) {
+
+    .mobile-hidden {
+
+        display: none !important;
+    }
+
+    .mobile-full {
+
+        width: 100% !important;
+    }
+
+    .mobile-text-center {
+
+        text-align: center !important;
+    }
+}

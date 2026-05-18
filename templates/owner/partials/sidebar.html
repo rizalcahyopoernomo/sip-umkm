@@ -1,0 +1,195 @@
+<div class="d-flex flex-column flex-shrink-0 p-3 bg-white h-100 sidebar-container">
+
+    <!-- ========================= -->
+    <!-- LOGO -->
+    <!-- ========================= -->
+
+    <a
+        href="{{ url_for('owner.dashboard') }}"
+        class="d-flex align-items-center mb-4 text-decoration-none px-2"
+    >
+
+        <div
+            class="brand-icon bg-primary text-white rounded-3 d-flex align-items-center justify-content-center fw-bold me-2"
+            style="width: 32px; height: 32px;"
+        >
+
+            {% if current_user.profile_image %}
+
+                <img
+                    src="{{ url_for(
+                        'static',
+                        filename='uploads/profile/' + (
+                            current_user.profile_image
+                            or 'default.png'
+                        )
+                    ) }}"
+                    alt="Owner"
+                    class="rounded-3"
+                    style="
+                        width: 32px;
+                        height: 32px;
+                        object-fit: cover;
+                    "
+                    onerror="this.src='/static/uploads/profile/default.png'"
+                >
+
+            {% else %}
+
+                {{ current_user.username[0] | upper }}
+
+            {% endif %}
+
+        </div>
+
+        <span class="fs-5 fw-bold text-dark">
+
+            SIP-<span class="text-primary">UMKM</span>
+
+        </span>
+
+    </a>
+
+    <!-- ========================= -->
+    <!-- MENU UTAMA -->
+    <!-- ========================= -->
+
+    <ul class="nav nav-pills flex-column mb-auto gap-1">
+
+        <!-- DASHBOARD -->
+
+        <li>
+
+            <a
+                href="{{ url_for('owner.dashboard') }}"
+                class="nav-link d-flex align-items-center
+                {{ 'active bg-primary text-white'
+                    if request.endpoint == 'owner.dashboard'
+                    else 'text-dark' }}"
+            >
+
+                <i class="fas fa-chart-line me-3"></i>
+
+                Dashboard
+
+            </a>
+
+        </li>
+
+        <!-- INVENTORY -->
+
+        <li>
+
+            <a
+                href="{{ url_for('owner.inventory') }}"
+                class="nav-link d-flex align-items-center
+                {{ 'active bg-success text-white'
+                    if request.endpoint == 'owner.inventory'
+                    else 'text-dark' }}"
+            >
+
+                <i class="fas fa-boxes-stacked me-3"></i>
+
+                Inventory
+
+            </a>
+
+        </li>
+
+        <!-- CUSTOMER -->
+
+        <li>
+
+            <a
+                href="{{ url_for('owner.customer') }}"
+                class="nav-link d-flex align-items-center
+                {{ 'active bg-info text-white'
+                    if request.endpoint == 'owner.customer'
+                    else 'text-dark' }}"
+            >
+
+                <i class="fas fa-users me-3"></i>
+
+                Customer
+
+            </a>
+
+        </li>
+
+        <!-- INVOICES -->
+
+        <li>
+
+            <a
+                href="{{ url_for('owner.invoice_history') }}"
+                class="nav-link d-flex align-items-center
+                {{ 'active bg-dark text-white'
+                    if request.endpoint in [
+                        'owner.invoice_history',
+                        'owner.invoice_detail'
+                    ]
+                    else 'text-dark' }}"
+            >
+
+                <i class="fas fa-receipt me-3"></i>
+
+                Invoices
+
+            </a>
+
+        </li>
+
+        <!-- REPORTS -->
+
+        <li>
+
+            <a
+                href="{{ url_for('owner.reports') }}"
+                class="nav-link d-flex align-items-center
+                {{ 'active bg-warning text-dark fw-semibold'
+                    if request.endpoint == 'owner.reports'
+                    else 'text-dark' }}"
+            >
+
+                <i class="fas fa-file-invoice-dollar me-3"></i>
+
+                Reports
+
+            </a>
+
+        </li>
+
+    </ul>
+
+    <!-- ========================= -->
+    <!-- DIVIDER -->
+    <!-- ========================= -->
+
+    <hr class="text-muted opacity-25">
+
+    <!-- ========================= -->
+    <!-- QUICK ACCESS -->
+    <!-- ========================= -->
+
+    <ul class="nav nav-pills flex-column gap-1">
+
+        <!-- POS -->
+
+        <li>
+
+            <a
+                href="{{ url_for('cashier.pos') }}"
+                class="nav-link d-flex align-items-center text-muted"
+            >
+
+                <i class="fas fa-cash-register me-3"></i>
+
+                Buka Kasir
+
+            </a>
+
+        </li>
+
+    </ul>
+
+</div>

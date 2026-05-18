@@ -1,0 +1,225 @@
+<nav class="navbar navbar-expand-lg bg-white px-4 py-2 w-100">
+
+    <div class="container-fluid p-0">
+
+        <!-- TIME -->
+
+        <div class="navbar-time d-none d-md-flex align-items-center">
+
+            <i class="far fa-clock text-muted me-2"></i>
+
+            <span
+                id="owner-clock"
+                class="fw-bold text-primary font-number"
+            >
+                00:00:00
+            </span>
+
+            <span
+                class="text-muted ms-2 small border-start ps-2"
+                id="owner-date"
+            >
+                -- April 2026
+            </span>
+
+        </div>
+
+        <!-- RIGHT NAV -->
+
+        <div class="d-flex align-items-center gap-3 ms-auto">
+
+            <!-- USER INFO -->
+
+            <div class="text-end d-none d-sm-block">
+
+                <p class="fw-bold m-0 small text-dark">
+
+                    {{ current_user.username }}
+
+                </p>
+
+                <small
+                    class="text-muted text-uppercase fw-semibold"
+                    style="
+                        font-size: 10px;
+                        letter-spacing: 0.5px;
+                    "
+                >
+
+                    {{ current_user.role }}
+
+                </small>
+
+            </div>
+
+            <!-- DROPDOWN -->
+
+            <div class="dropdown">
+
+                <a
+                    href="#"
+                    class="d-flex align-items-center text-decoration-none dropdown-toggle"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                >
+
+                    {% if current_user.profile_image %}
+
+                    <img
+                        src="{{ url_for(
+                            'static',
+                            filename='uploads/profile/' + current_user.profile_image
+                        ) }}"
+                        alt="Profile"
+                        width="42"
+                        height="42"
+                        class="rounded-circle border shadow-sm"
+                        style="object-fit: cover;"
+                    >
+
+                    {% else %}
+
+                    <img
+                        src="{{ url_for(
+                            'static',
+                            filename='uploads/profile/default.png'
+                        ) }}"
+                        alt="Default Profile"
+                        width="42"
+                        height="42"
+                        class="rounded-circle border shadow-sm"
+                        style="object-fit: cover;"
+                    >
+
+                    {% endif %}
+
+                </a>
+
+                <!-- MENU -->
+
+                <ul
+                    class="dropdown-menu dropdown-menu-end shadow-lg border-0 mt-2 p-2"
+                    style="
+                        min-width: 230px;
+                        border-radius: 18px;
+                    "
+                >
+
+                    <!-- USER HEADER -->
+
+                    <li class="px-3 py-2">
+
+                        <div class="d-flex align-items-center gap-3">
+
+                            {% if current_user.profile_image %}
+
+                            <img
+                                src="{{ url_for(
+                                    'static',
+                                    filename='uploads/profile/' + current_user.profile_image
+                                ) }}"
+                                alt="Profile"
+                                width="48"
+                                height="48"
+                                class="rounded-circle border"
+                                style="object-fit: cover;"
+                            >
+
+                            {% else %}
+
+                            <img
+                                src="{{ url_for(
+                                    'static',
+                                    filename='uploads/profile/default.png'
+                                ) }}"
+                                alt="Profile"
+                                width="48"
+                                height="48"
+                                class="rounded-circle border"
+                                style="object-fit: cover;"
+                            >
+
+                            {% endif %}
+
+                            <div>
+
+                                <h6 class="fw-bold mb-0">
+
+                                    {{ current_user.username }}
+
+                                </h6>
+
+                                <small
+                                    class="
+                                        text-muted
+                                        text-uppercase
+                                        fw-semibold
+                                    "
+                                >
+
+                                    {{ current_user.role }}
+
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    </li>
+
+                    <li>
+                        <hr class="dropdown-divider opacity-50">
+                    </li>
+
+                    <!-- ACCOUNT SETTINGS -->
+
+                    <li>
+
+                        <a
+                            class="dropdown-item py-2 rounded-3"
+                            href="{{ url_for('owner.account_settings') }}"
+                        >
+
+                            <i class="fas fa-user-gear me-2"></i>
+
+                            Pengaturan Akun
+
+                        </a>
+
+                    </li>
+
+                    <li>
+                        <hr class="dropdown-divider opacity-50">
+                    </li>
+
+                    <!-- LOGOUT -->
+
+                    <li>
+
+                        <a
+                            class="
+                                dropdown-item
+                                py-2
+                                rounded-3
+                                text-danger
+                            "
+                            href="{{ url_for('auth.logout') }}"
+                        >
+
+                            <i class="fas fa-sign-out-alt me-2"></i>
+
+                            Keluar
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</nav>

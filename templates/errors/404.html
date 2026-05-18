@@ -1,0 +1,276 @@
+{% extends "base.html" %}
+
+{% block title %}
+404 | Halaman Tidak Ditemukan
+{% endblock %}
+
+{% block head %}
+<style>
+
+    .error-page {
+
+        min-height: 100vh;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        padding: 40px 20px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #f8fafc,
+                #e2e8f0
+            );
+    }
+
+    .error-card {
+
+        width: 100%;
+
+        max-width: 650px;
+
+        background: #ffffff;
+
+        border-radius: 28px;
+
+        padding: 60px 50px;
+
+        text-align: center;
+
+        box-shadow:
+            0 20px 60px rgba(15, 23, 42, 0.12);
+
+        animation: fadeUp 0.5s ease;
+    }
+
+    .error-code {
+
+        font-size: 110px;
+
+        font-weight: 800;
+
+        line-height: 1;
+
+        color: #1d4ed8;
+
+        margin-bottom: 15px;
+    }
+
+    .error-title {
+
+        font-size: 32px;
+
+        font-weight: 700;
+
+        color: #0f172a;
+
+        margin-bottom: 14px;
+    }
+
+    .error-description {
+
+        font-size: 16px;
+
+        line-height: 1.8;
+
+        color: #64748b;
+
+        margin-bottom: 35px;
+    }
+
+    .error-actions {
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        gap: 16px;
+
+        flex-wrap: wrap;
+    }
+
+    .error-btn {
+
+        padding: 14px 28px;
+
+        border-radius: 14px;
+
+        text-decoration: none;
+
+        font-size: 14px;
+
+        font-weight: 600;
+
+        transition: 0.25s ease;
+    }
+
+    .btn-primary-custom {
+
+        background: #1d4ed8;
+
+        color: #ffffff;
+    }
+
+    .btn-primary-custom:hover {
+
+        background: #1e40af;
+
+        color: #ffffff;
+
+        transform: translateY(-2px);
+    }
+
+    .btn-secondary-custom {
+
+        background: #e2e8f0;
+
+        color: #0f172a;
+    }
+
+    .btn-secondary-custom:hover {
+
+        background: #cbd5e1;
+
+        color: #0f172a;
+
+        transform: translateY(-2px);
+    }
+
+    .error-icon {
+
+        width: 90px;
+
+        height: 90px;
+
+        margin: 0 auto 25px;
+
+        border-radius: 50%;
+
+        background:
+            rgba(29, 78, 216, 0.1);
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        font-size: 38px;
+
+        color: #1d4ed8;
+    }
+
+    @keyframes fadeUp {
+
+        from {
+
+            opacity: 0;
+
+            transform: translateY(20px);
+        }
+
+        to {
+
+            opacity: 1;
+
+            transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 768px) {
+
+        .error-card {
+
+            padding: 45px 30px;
+        }
+
+        .error-code {
+
+            font-size: 80px;
+        }
+
+        .error-title {
+
+            font-size: 26px;
+        }
+
+        .error-description {
+
+            font-size: 15px;
+        }
+
+        .error-actions {
+
+            flex-direction: column;
+        }
+
+        .error-btn {
+
+            width: 100%;
+        }
+    }
+
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="error-page">
+
+    <div class="error-card">
+
+        <div class="error-icon">
+
+            <i class="fas fa-search"></i>
+
+        </div>
+
+        <div class="error-code">
+
+            404
+
+        </div>
+
+        <h1 class="error-title">
+
+            Halaman Tidak Ditemukan
+
+        </h1>
+
+        <p class="error-description">
+
+            Halaman yang kamu cari tidak tersedia,
+            mungkin sudah dipindahkan,
+            dihapus,
+            atau URL yang dimasukkan tidak valid.
+        </p>
+
+        <div class="error-actions">
+
+            <a
+                href="{{ url_for('index') }}"
+                class="error-btn btn-primary-custom"
+            >
+                Kembali ke Beranda
+            </a>
+
+            <a
+                href="javascript:history.back()"
+                class="error-btn btn-secondary-custom"
+            >
+                Halaman Sebelumnya
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

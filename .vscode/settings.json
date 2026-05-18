@@ -1,0 +1,20 @@
+{
+  "editor.fontSize": 16,
+  "editor.fontFamily": "Fira Code, Consolas, monospace",
+  "editor.lineHeight": 24,
+  "editor.wordWrap": "on",
+
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+
+  "editor.cursorSmoothCaretAnimation": "on",
+  "editor.smoothScrolling": true,
+
+  "workbench.colorTheme": "One Dark Pro",
+  "workbench.iconTheme": "material-icon-theme",
+
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 1000,
+
+  "liveServer.settings.CustomBrowser": "chrome"
+}

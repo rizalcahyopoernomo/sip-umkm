@@ -1,0 +1,779 @@
+{% extends "owner/base_owner.html" %}
+
+{% block content %}
+<div class="inventory-section">
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h3 class="fw-bold m-0">
+                Inventory Management
+            </h3>
+
+            <p class="text-muted small">
+                Kelola stok dan produk
+            </p>
+        </div>
+
+        <button
+            type="button"
+            class="btn btn-primary btn-add-product"
+            data-bs-toggle="modal"
+            data-bs-target="#addProductModal">
+
+            + Tambah Produk
+        </button>
+
+    </div>
+
+    <!-- SEARCH -->
+    <div class="d-flex gap-2 mb-3">
+
+        <form
+            method="GET"
+            class="d-flex w-100 gap-2">
+
+            <input
+                type="text"
+                name="q"
+                class="form-control"
+                placeholder="Cari produk..."
+                value="{{ request.args.get('q','') }}">
+
+            <button
+                type="submit"
+                class="btn btn-primary">
+
+                Cari
+            </button>
+
+            <a
+                href="{{ url_for('owner.inventory') }}"
+                class="btn btn-secondary">
+
+                Reset
+            </a>
+
+        </form>
+
+        <a
+            href="{{ url_for('owner.inventory', low_stock=1) }}"
+            class="btn btn-danger">
+
+            Low Stock
+        </a>
+
+    </div>
+
+    <!-- TOTAL VALUE -->
+    <div class="alert alert-info">
+
+        Total Nilai Stok:
+
+        <strong>
+            {{ total_value | rupiah }}
+        </strong>
+
+    </div>
+
+    <!-- TABLE -->
+    <div class="card shadow-sm border-0">
+
+        <div class="table-responsive">
+
+            <table class="table align-middle mb-0">
+
+                <thead>
+
+                    <tr>
+                        <th>Produk</th>
+                        <th>Kategori</th>
+                        <th>Harga</th>
+                        <th>Stok</th>
+                        <th>DSS</th>
+                        <th class="text-center">Aksi</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for p in products %}
+                <tr>
+
+                    <!-- PRODUK -->
+                    <td>
+
+                        <div class="d-flex align-items-center gap-3">
+
+                            <img
+                                src="{{ url_for('static', filename='products/' + p.image) }}"
+                                width="48"
+                                height="48"
+                                class="rounded object-fit-cover"
+                                onerror="this.src='/static/img/no-image.png'">
+
+                            <div>
+
+                                <div class="fw-semibold">
+                                    {{ p.name }}
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </td>
+
+                    <!-- KATEGORI -->
+                    <td>
+                        {{ p.category.name }}
+                    </td>
+
+                    <!-- HARGA -->
+                    <td>
+                        {{ p.price | rupiah }}
+                    </td>
+
+                    <!-- STOK -->
+                    <td>
+
+                        {% if p.stock <= p.min_stock %}
+
+                            <span class="badge bg-danger px-3 py-2">
+                                ⚠ {{ p.stock }}
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge bg-success px-3 py-2">
+                                {{ p.stock }}
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <!-- DSS -->
+                    <td>
+
+                        {% set dss = dss_map.get(p.id) %}
+
+                        {% if dss %}
+
+                            {% if dss.depletion_status == "CRITICAL" %}
+
+                                <span class="badge bg-danger">
+                                    CRITICAL
+                                </span>
+
+                            {% elif dss.depletion_status == "WARNING" %}
+
+                                <span class="badge bg-warning text-dark">
+                                    WARNING
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-success">
+                                    SAFE
+                                </span>
+
+                            {% endif %}
+
+                            {% if dss.restock_qty > 0 %}
+
+                                <div class="mt-1">
+
+                                    <small class="text-primary fw-semibold">
+
+                                        Restock:
+                                        {{ dss.restock_qty }}
+
+                                    </small>
+
+                                </div>
+
+                            {% endif %}
+
+                        {% else %}
+
+                            <small class="text-muted">
+                                -
+                            </small>
+
+                        {% endif %}
+
+                    </td>
+
+                    <!-- AKSI -->
+                    <td class="text-center">
+
+                        <div class="d-flex justify-content-center gap-2 flex-wrap">
+
+                            <!-- RESTOCK -->
+                            <button
+                                type="button"
+                                class="btn btn-sm btn-primary btn-restock"
+                                data-id="{{ p.id }}"
+                                data-name="{{ p.name }}"
+                                data-bs-toggle="modal"
+                                data-bs-target="#restockModal">
+
+                                Restock
+                            </button>
+
+                            <!-- ADJUST -->
+                            <button
+                                type="button"
+                                class="btn btn-sm btn-warning btn-adjust"
+                                data-id="{{ p.id }}"
+                                data-name="{{ p.name }}"
+                                data-bs-toggle="modal"
+                                data-bs-target="#adjustModal">
+
+                                Adjust
+                            </button>
+
+                            <!-- HISTORY -->
+                            <a
+                                href="{{ url_for('owner.stock_history', product_id=p.id) }}"
+                                class="btn btn-sm btn-dark">
+
+                                History
+                            </a>
+
+                            <!-- DELETE -->
+                            <button
+                                type="button"
+                                class="btn btn-sm btn-danger btn-delete-product"
+                                data-id="{{ p.id }}"
+                                data-name="{{ p.name }}"
+                                data-bs-toggle="modal"
+                                data-bs-target="#deleteModal"
+                                onclick="setDeleteData('{{ p.id }}','{{ p.name }}')">
+
+                                Hapus
+                            </button>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+                {% endfor %}
+
+                {% if products|length == 0 %}
+
+                <tr>
+
+                    <td colspan="6" class="text-center text-muted py-5">
+
+                        Tidak ada data
+
+                    </td>
+
+                </tr>
+
+                {% endif %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ========================= -->
+<!-- MODAL ADD PRODUCT -->
+<!-- ========================= -->
+<div
+    class="modal fade"
+    id="addProductModal"
+    tabindex="-1"
+    aria-hidden="true">
+
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <form
+                method="POST"
+                action="{{ url_for('owner.add_product') }}"
+                enctype="multipart/form-data">
+
+                <div class="modal-header">
+
+                    <h5 class="fw-bold">
+                        Tambah Produk
+                    </h5>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Nama Produk
+                            </label>
+
+                            <input
+                                type="text"
+                                name="name"
+                                class="form-control"
+                                required>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Kategori
+                            </label>
+
+                            <select
+                                name="category_id"
+                                class="form-select"
+                                required>
+
+                                {% for c in categories %}
+
+                                <option value="{{ c.id }}">
+                                    {{ c.name }}
+                                </option>
+
+                                {% endfor %}
+
+                            </select>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Harga
+                            </label>
+
+                            <input
+                                type="number"
+                                name="price"
+                                class="form-control"
+                                required>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Modal Produk
+                            </label>
+
+                            <input
+                                type="number"
+                                name="cost"
+                                class="form-control"
+                                required>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Stok Awal
+                            </label>
+
+                            <input
+                                type="number"
+                                name="stock"
+                                class="form-control"
+                                required>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Minimum Stok
+                            </label>
+
+                            <input
+                                type="number"
+                                name="min_stock"
+                                class="form-control"
+                                required>
+
+                        </div>
+
+                        <div class="col-md-12">
+
+                            <label class="form-label">
+                                Gambar Produk
+                            </label>
+
+                            <input
+                                type="file"
+                                name="image"
+                                class="form-control">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary">
+
+                        Simpan Produk
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+
+                        Batal
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ========================= -->
+<!-- MODAL RESTOCK -->
+<!-- ========================= -->
+<div
+    class="modal fade"
+    id="restockModal"
+    tabindex="-1"
+    aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <form
+                id="restockForm"
+                method="POST"
+                action="{{ url_for('owner.restock') }}">
+
+                <div class="modal-header">
+
+                    <h5 class="fw-bold">
+                        Restock Produk
+                    </h5>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <input
+                        type="hidden"
+                        name="product_id"
+                        id="restockProductId">
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Produk
+                        </label>
+
+                        <input
+                            type="text"
+                            id="restockProductName"
+                            class="form-control"
+                            readonly>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Jumlah Restock
+                        </label>
+
+                        <input
+                            type="number"
+                            name="qty"
+                            class="form-control"
+                            required>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Catatan
+                        </label>
+
+                        <textarea
+                            name="note"
+                            rows="3"
+                            class="form-control"></textarea>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary">
+
+                        Simpan
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+
+                        Batal
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ========================= -->
+<!-- MODAL ADJUST -->
+<!-- ========================= -->
+<div
+    class="modal fade"
+    id="adjustModal"
+    tabindex="-1"
+    aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <form
+                method="POST"
+                action="{{ url_for('owner.adjust_stock') }}">
+
+                <div class="modal-header">
+
+                    <h5 class="fw-bold">
+                        Penyesuaian Stok
+                    </h5>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <input
+                        type="hidden"
+                        name="product_id"
+                        id="adjustProductId">
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Produk
+                        </label>
+
+                        <input
+                            type="text"
+                            id="adjustProductName"
+                            class="form-control"
+                            readonly>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Qty (+/-)
+                        </label>
+
+                        <input
+                            type="number"
+                            name="qty"
+                            class="form-control"
+                            required>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Alasan
+                        </label>
+
+                        <input
+                            type="text"
+                            name="note"
+                            class="form-control">
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        type="submit"
+                        class="btn btn-warning">
+
+                        Simpan
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+
+                        Batal
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ========================= -->
+<!-- MODAL DELETE -->
+<!-- ========================= -->
+<div
+    class="modal fade"
+    id="deleteModal"
+    tabindex="-1"
+    aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <form
+                method="POST"
+                id="deleteForm">
+
+                <div class="modal-header">
+
+                    <h5 class="fw-bold">
+                        Hapus Produk
+                    </h5>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <p>
+                        Yakin ingin menghapus produk:
+                    </p>
+
+                    <strong id="delete_product_name"></strong>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        type="submit"
+                        class="btn btn-danger">
+
+                        Hapus
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+
+                        Batal
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ========================= -->
+<!-- SCRIPT -->
+<!-- ========================= -->
+<script>
+
+function setDeleteData(id, name) {
+
+    document.getElementById(
+        'delete_product_name'
+    ).innerText = name;
+
+    document.getElementById(
+        'deleteForm'
+    ).action =
+        "/owner/inventory/delete/" + id;
+}
+
+function setAdjustData(id, name) {
+
+    document.getElementById(
+        'adjust_product_id'
+    ).value = id;
+
+    document.getElementById(
+        'adjust_product_name'
+    ).value = name;
+}
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,188 @@
+{% extends "owner/base_owner.html" %}
+
+{% block content %}
+<div class="dashboard-content">
+
+    <!-- ========================= -->
+    <!-- HEADER + EXPORT -->
+    <!-- ========================= -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold m-0">Report System</h3>
+
+        <!-- 🔥 EXPORT BUTTON -->
+        <div class="d-flex gap-2">
+
+            <a href="{{ url_for('owner.export_csv', start_date=start_date, end_date=end_date) }}"
+               class="btn btn-success">
+                <i class="fas fa-file-csv me-2"></i>CSV
+            </a>
+
+            <a href="{{ url_for('owner.export_pdf', start_date=start_date, end_date=end_date) }}"
+               class="btn btn-danger">
+                <i class="fas fa-file-pdf me-2"></i>PDF
+            </a>
+
+        </div>
+    </div>
+
+    <!-- ========================= -->
+    <!-- 🔍 FILTER SECTION -->
+    <!-- ========================= -->
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+        <div class="card-body">
+            <form method="GET" action="{{ url_for('owner.reports') }}">
+                <div class="row g-3 align-items-end">
+
+                    <div class="col-md-4">
+                        <label class="form-label">Start Date</label>
+                        <input type="date" name="start_date" class="form-control"
+                               value="{{ start_date }}">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">End Date</label>
+                        <input type="date" name="end_date" class="form-control"
+                               value="{{ end_date }}">
+                    </div>
+
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary w-100">
+                            Generate Report
+                        </button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========================= -->
+    <!-- 📊 KPI SECTION -->
+    <!-- ========================= -->
+    <div class="row g-3 mb-4">
+
+        {% set title="Total Transaksi" %}
+        {% set value=total_transaksi %}
+        {% set bg_color="bg-primary" %}
+        {% set is_currency=False %}
+        {% include 'owner/partials/stats_card.html' %}
+
+        {% set title="Total Omzet" %}
+        {% set value=total_revenue %}
+        {% set bg_color="bg-dark" %}
+        {% set is_currency=True %}
+        {% include 'owner/partials/stats_card.html' %}
+
+        {% set title="Total Profit" %}
+        {% set value=total_profit %}
+        {% set bg_color="bg-success" %}
+        {% set is_currency=True %}
+        {% include 'owner/partials/stats_card.html' %}
+
+        {% set title="Rata-rata Transaksi" %}
+        {% set value=avg_transaction %}
+        {% set bg_color="bg-warning" %}
+        {% set is_currency=True %}
+        {% include 'owner/partials/stats_card.html' %}
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- 📈 ANALYTICS -->
+    <!-- ========================= -->
+    <div class="row g-4 mb-4">
+
+        <!-- TOP PRODUCTS -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-header bg-white border-0">
+                    <h6 class="fw-bold">🔥 Top Produk Terlaris</h6>
+                </div>
+                <div class="card-body">
+
+                    {% for item in top_products %}
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>{{ item.product_name }}</span>
+                        <span class="fw-bold">{{ item.total_qty }}</span>
+                    </div>
+                    {% else %}
+                    <p class="text-muted">Tidak ada data</p>
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
+
+        <!-- PAYMENT METHODS -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-header bg-white border-0">
+                    <h6 class="fw-bold">💳 Metode Pembayaran</h6>
+                </div>
+                <div class="card-body">
+
+                    {% for item in payment_methods %}
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>{{ item.method }}</span>
+                        <span class="fw-bold">{{ item.total }}</span>
+                    </div>
+                    {% else %}
+                    <p class="text-muted">Tidak ada data</p>
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- 📋 TABLE -->
+    <!-- ========================= -->
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-header bg-white border-0">
+            <h6 class="fw-bold">📄 Daftar Transaksi</h6>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="table-responsive">
+
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Tanggal</th>
+                            <th>Customer</th>
+                            <th>Metode</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for trx in transactions %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ trx.timestamp.strftime('%d %b %Y') }}</td>
+                            <td>{{ trx.customer_name }}</td>
+                            <td>{{ trx.payment_method }}</td>
+                            <td class="fw-bold">
+                                {{ trx.total_amount | rupiah }}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-4">
+                                Tidak ada transaksi pada periode ini
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,250 @@
+{% extends "owner/base_owner.html" %}
+
+{% block content %}
+
+<div class="dashboard-content">
+
+    <!-- PAGE HEADER -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h3 class="fw-bold mb-1">
+                Customer Intelligence
+            </h3>
+
+            <small class="text-muted">
+                Lightweight retail customer analytics
+            </small>
+
+        </div>
+
+        <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill">
+            Customer Analytics
+        </span>
+
+    </div>
+
+    <!-- CONTRIBUTION -->
+
+    <div class="card mb-4 border-0 shadow-sm">
+
+        <div class="card-body p-4">
+
+            <div class="d-flex align-items-center gap-3">
+
+                <div style="font-size:2.2rem;">
+                    👥
+                </div>
+
+                <div>
+
+                    <div class="fw-bold fs-5">
+                        {{ contribution.message }}
+                    </div>
+
+                    <small class="text-muted">
+                        Berdasarkan total revenue transaksi
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="row g-4">
+
+        <!-- TOP SPENDER -->
+
+        <div class="col-lg-4">
+
+            <div class="card h-100 border-0 shadow-sm">
+
+                <div class="card-body p-4">
+
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+
+                        <div>
+
+                            <h5 class="fw-bold mb-1">
+                                💰 Top Spender
+                            </h5>
+
+                            <small class="text-muted">
+                                Customer dengan total belanja tertinggi
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                    {% if top_spenders %}
+
+                        <div class="d-flex flex-column gap-3">
+
+                            {% for customer in top_spenders %}
+
+                            <div class="border rounded-4 p-3">
+
+                                <div class="fw-semibold">
+
+                                    {{ customer.customer_name }}
+
+                                </div>
+
+                                <div class="small text-muted mt-1">
+
+                                    {{ customer.total_transactions }}
+                                    transaksi
+
+                                </div>
+
+                                <div class="fw-bold text-success mt-2">
+
+                                    Rp {{ "{:,.0f}".format(
+                                        customer.total_spent
+                                    ).replace(",", ".") }}
+
+                                </div>
+
+                            </div>
+
+                            {% endfor %}
+
+                        </div>
+
+                    {% else %}
+
+                        <div class="text-center py-5 text-muted">
+
+                            Belum ada data customer
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- MOST ACTIVE -->
+
+        <div class="col-lg-4">
+
+            <div class="card h-100 border-0 shadow-sm">
+
+                <div class="card-body p-4">
+
+                    <h5 class="fw-bold mb-1">
+                        🔥 Most Active
+                    </h5>
+
+                    <small class="text-muted">
+                        Customer paling sering transaksi
+                    </small>
+
+                    <div class="d-flex flex-column gap-3 mt-4">
+
+                        {% for customer in most_active %}
+
+                        <div class="border rounded-4 p-3">
+
+                            <div class="fw-semibold">
+
+                                {{ customer.customer_name }}
+
+                            </div>
+
+                            <div class="fw-bold text-primary mt-2">
+
+                                {{ customer.transaction_count }}
+                                transaksi
+
+                            </div>
+
+                            <small class="text-muted">
+
+                                Total:
+                                Rp {{ "{:,.0f}".format(
+                                    customer.total_spent
+                                ).replace(",", ".") }}
+
+                            </small>
+
+                        </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- REPEAT CUSTOMER -->
+
+        <div class="col-lg-4">
+
+            <div class="card h-100 border-0 shadow-sm">
+
+                <div class="card-body p-4">
+
+                    <h5 class="fw-bold mb-1">
+                        🔄 Repeat Customer
+                    </h5>
+
+                    <small class="text-muted">
+                        Customer yang kembali berbelanja
+                    </small>
+
+                    <div class="d-flex flex-column gap-3 mt-4">
+
+                        {% for customer in repeat_customers %}
+
+                        <div class="border rounded-4 p-3">
+
+                            <div class="fw-semibold">
+
+                                {{ customer.customer_name }}
+
+                            </div>
+
+                            <div class="fw-bold text-warning mt-2">
+
+                                {{ customer.transaction_count }}
+                                transaksi
+
+                            </div>
+
+                            <small class="text-muted">
+
+                                Last transaction:
+                                {{ customer.last_transaction.strftime("%d %b %Y") }}
+
+                            </small>
+
+                        </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

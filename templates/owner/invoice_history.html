@@ -1,0 +1,182 @@
+{% extends "owner/base_owner.html" %}
+
+{% block content %}
+
+<div class="dashboard-content">
+
+    <!-- HEADER -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h3 class="fw-bold mb-1">
+                Invoice History
+            </h3>
+
+            <small class="text-muted">
+                Riwayat transaksi dan invoice customer
+            </small>
+
+        </div>
+
+        <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill">
+            {{ invoices|length }} Invoice
+        </span>
+
+    </div>
+
+    <!-- SEARCH -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <form method="GET">
+
+                <div class="input-group">
+
+                    <input
+                        type="text"
+                        name="q"
+                        class="form-control rounded-start-pill"
+                        placeholder="Cari invoice / customer..."
+                        value="{{ keyword or '' }}">
+
+                    <button
+                        class="btn btn-dark rounded-end-pill px-4">
+
+                        Search
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- TABLE -->
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-body p-0">
+
+            {% if invoices %}
+
+            <div class="table-responsive">
+
+                <table class="table align-middle mb-0">
+
+                    <thead class="table-light">
+
+                        <tr>
+
+                            <th>Invoice</th>
+                            <th>Customer</th>
+                            <th>Cashier</th>
+                            <th>Payment</th>
+                            <th>Total</th>
+                            <th>Date</th>
+                            <th></th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for invoice in invoices %}
+
+                        <tr>
+
+                            <td>
+
+                                <div class="fw-semibold">
+
+                                    {{ invoice.invoice_number }}
+
+                                </div>
+
+                            </td>
+
+                            <td>
+
+                                {{ invoice.customer_name }}
+
+                            </td>
+
+                            <td>
+
+                                {{ invoice.cashier.username }}
+
+                            </td>
+
+                            <td>
+
+                                <span class="badge bg-light text-dark rounded-pill px-3 py-2">
+
+                                    {{ invoice.payment_method }}
+
+                                </span>
+
+                            </td>
+
+                            <td class="fw-bold text-success">
+
+                                Rp {{ "{:,.0f}".format(
+                                    invoice.total_amount
+                                ).replace(",", ".") }}
+
+                            </td>
+
+                            <td>
+
+                                {{ invoice.timestamp.strftime("%d %b %Y") }}
+
+                            </td>
+
+                            <td>
+
+                                <a
+                                    href="{{ url_for(
+                                        'owner.invoice_detail',
+                                        invoice_number=invoice.invoice_number
+                                    ) }}"
+                                    class="btn btn-sm btn-dark rounded-pill px-3">
+
+                                    Detail
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% else %}
+
+            <div class="text-center py-5 text-muted">
+
+                Belum ada invoice tersedia
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

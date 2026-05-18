@@ -1,0 +1,446 @@
+{% extends 'cashier/base_cashier.html' %}
+
+{% block title %}
+    Profile Kasir
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- ===================================== -->
+    <!-- PAGE HEADER -->
+    <!-- ===================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+
+        <div>
+
+            <h2 class="fw-bold text-dark mb-1">
+
+                Profile Kasir
+
+            </h2>
+
+            <p class="text-muted mb-0">
+
+                Kelola informasi akun kasir dan foto profile
+
+            </p>
+
+        </div>
+
+        <a
+            href="{{ url_for('cashier.pos') }}"
+            class="btn btn-primary rounded-pill px-4 shadow-sm"
+        >
+
+            <i class="fas fa-cash-register me-2"></i>
+
+            Kembali ke POS
+
+        </a>
+
+    </div>
+
+    <!-- ===================================== -->
+    <!-- PROFILE SECTION -->
+    <!-- ===================================== -->
+
+    <div class="row g-4">
+
+        <!-- ================================= -->
+        <!-- LEFT -->
+        <!-- ================================= -->
+
+        <div class="col-lg-4">
+
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+
+                <div class="card-body text-center p-4">
+
+                    <!-- AVATAR -->
+
+                    <div class="mb-4">
+
+                        <img
+                            id="preview-image"
+                            src="{{ url_for(
+                                'static',
+                                filename='uploads/profile/' + (
+                                    current_user.profile_image
+                                    or 'default.png'
+                                )
+                            ) }}"
+                            alt="Profile"
+                            class="rounded-circle shadow-sm border"
+                            width="170"
+                            height="170"
+                            style="
+                                object-fit: cover;
+                                background: #ffffff;
+                            "
+                            onerror="this.src='/static/uploads/profile/default.png'"
+                        >
+
+                    </div>
+
+                    <!-- USERNAME -->
+
+                    <h4 class="fw-bold text-dark mb-1">
+
+                        {{ current_user.username }}
+
+                    </h4>
+
+                    <!-- ROLE -->
+
+                    <span class="badge bg-primary-subtle text-primary px-4 py-2 rounded-pill text-uppercase fw-bold">
+
+                        {{ current_user.role }}
+
+                    </span>
+
+                    <!-- STATUS -->
+
+                    <div class="mt-4">
+
+                        <div class="d-flex justify-content-center align-items-center gap-2 mb-2">
+
+                            <span
+                                class="rounded-circle bg-success"
+                                style="
+                                    width: 10px;
+                                    height: 10px;
+                                    display: inline-block;
+                                "
+                            ></span>
+
+                            <span class="fw-semibold text-success">
+
+                                Online
+
+                            </span>
+
+                        </div>
+
+                        <small class="text-muted">
+
+                            Session Aktif
+
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ================================= -->
+        <!-- RIGHT -->
+        <!-- ================================= -->
+
+        <div class="col-lg-8">
+
+            <!-- ACCOUNT INFO -->
+
+            <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+                <div class="card-body p-4">
+
+                    <h5 class="fw-bold mb-4">
+
+                        Informasi Akun
+
+                    </h5>
+
+                    <div class="row g-3">
+
+                        <!-- USERNAME -->
+
+                        <div class="col-md-6">
+
+                            <div class="border rounded-4 p-3 h-100 bg-light-subtle">
+
+                                <small class="text-muted d-block mb-1">
+
+                                    Username
+
+                                </small>
+
+                                <h6 class="fw-bold mb-0">
+
+                                    {{ current_user.username }}
+
+                                </h6>
+
+                            </div>
+
+                        </div>
+
+                        <!-- ROLE -->
+
+                        <div class="col-md-6">
+
+                            <div class="border rounded-4 p-3 h-100 bg-light-subtle">
+
+                                <small class="text-muted d-block mb-1">
+
+                                    Role
+
+                                </small>
+
+                                <h6 class="fw-bold mb-0 text-uppercase">
+
+                                    {{ current_user.role }}
+
+                                </h6>
+
+                            </div>
+
+                        </div>
+
+                        <!-- WORK SHIFT -->
+
+                        <div class="col-md-6">
+
+                            <div class="border rounded-4 p-3 h-100 bg-light-subtle">
+
+                                <small class="text-muted d-block mb-1">
+
+                                    Jam Kerja
+
+                                </small>
+
+                                <h6 class="fw-bold mb-0">
+
+                                    08.00 - 16.00
+
+                                </h6>
+
+                            </div>
+
+                        </div>
+
+                        <!-- SHIFT -->
+
+                        <div class="col-md-6">
+
+                            <div class="border rounded-4 p-3 h-100 bg-light-subtle">
+
+                                <small class="text-muted d-block mb-1">
+
+                                    Shift
+
+                                </small>
+
+                                <h6 class="fw-bold mb-0">
+
+                                    Pagi
+
+                                </h6>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- MINI STATS -->
+
+            <div class="row g-4 mb-4">
+
+                <!-- TRANSACTION TODAY -->
+
+                <div class="col-md-6">
+
+                    <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                        <div class="card-body p-4">
+
+                            <div class="d-flex justify-content-between align-items-center">
+
+                                <div>
+
+                                    <small class="text-muted fw-semibold">
+
+                                        TRANSAKSI HARI INI
+
+                                    </small>
+
+                                    <h3 class="fw-bold mt-2 mb-0">
+
+                                        {{ current_user.transactions
+                                            | selectattr(
+                                                'timestamp'
+                                            )
+                                            | list
+                                            | length }}
+
+                                    </h3>
+
+                                </div>
+
+                                <div
+                                    class="bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center"
+                                    style="
+                                        width: 55px;
+                                        height: 55px;
+                                    "
+                                >
+
+                                    <i class="fas fa-receipt fs-5"></i>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- OMZET -->
+
+                <div class="col-md-6">
+
+                    <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                        <div class="card-body p-4">
+
+                            <div class="d-flex justify-content-between align-items-center">
+
+                                <div>
+
+                                    <small class="text-muted fw-semibold">
+
+                                        STATUS SESSION
+
+                                    </small>
+
+                                    <h5 class="fw-bold mt-2 mb-0 text-success">
+
+                                        Aktif & Aman
+
+                                    </h5>
+
+                                </div>
+
+                                <div
+                                    class="bg-success-subtle text-success rounded-circle d-flex align-items-center justify-content-center"
+                                    style="
+                                        width: 55px;
+                                        height: 55px;
+                                    "
+                                >
+
+                                    <i class="fas fa-shield-check fs-5"></i>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- UPLOAD -->
+
+            <div class="card border-0 shadow-sm rounded-4">
+
+                <div class="card-body p-4">
+
+                    <h5 class="fw-bold mb-4">
+
+                        Update Foto Profile
+
+                    </h5>
+
+                    <form
+                        method="POST"
+                        enctype="multipart/form-data"
+                    >
+
+                        <div class="mb-3">
+
+                            <input
+                                type="file"
+                                name="profile_image"
+                                id="profileInput"
+                                class="form-control"
+                                accept=".png,.jpg,.jpeg,.webp"
+                                required
+                            >
+
+                            <small class="text-muted">
+
+                                Format yang didukung:
+                                PNG, JPG, JPEG, WEBP
+
+                            </small>
+
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary rounded-pill px-4"
+                        >
+
+                            <i class="fas fa-upload me-2"></i>
+
+                            Upload Foto
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+
+<script>
+
+document
+    .getElementById('profileInput')
+    .addEventListener('change', function(event) {
+
+        const file = event.target.files[0];
+
+        if (!file) return;
+
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+
+            document
+                .getElementById('preview-image')
+                .src = e.target.result;
+        };
+
+        reader.readAsDataURL(file);
+    });
+
+</script>
+
+{% endblock %}

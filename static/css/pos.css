@@ -1,0 +1,252 @@
+/* =========================
+   ROOT SYSTEM (CLEANED)
+========================= */
+
+:root {
+    --primary: #4f46e5;
+    --secondary: #6366f1;
+    --bg-soft: #f8fafc;
+    --bg-light: #eef2ff;
+    --text-dark: #1e293b;
+    --text-muted: #64748b;
+}
+
+/* =========================
+   BASE LAYOUT
+========================= */
+
+body {
+    background: linear-gradient(180deg, var(--bg-soft), var(--bg-light)) !important;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    color: var(--text-dark);
+    overflow: hidden;
+}
+
+/* =========================
+   PRODUCT CARD
+========================= */
+
+.product-card {
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid rgba(0,0,0,0.05) !important;
+
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.25s ease;
+
+    will-change: transform;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+}
+
+.product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.08);
+}
+
+.product-card:active {
+    transform: scale(0.97);
+}
+
+/* =========================
+   IMAGE WRAPPER (FIX FINAL)
+========================= */
+
+.product-img-wrapper {
+    height: 160px;
+    background: #f8fafc;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+    flex-shrink: 0;
+
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+
+    padding: 10px; /* 🔥 biar ga nempel */
+}
+
+/* =========================
+   IMAGE FIX (ANTI KEPOTONG + NO JITTER)
+========================= */
+
+.product-img-wrapper img {
+    max-width: 100%;
+    max-height: 100%;
+
+    object-fit: contain; /* 🔥 FIX UTAMA */
+
+    display: block;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    will-change: transform;
+
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-img-wrapper img {
+    transform: scale(1.05);
+}
+
+/* =========================
+   TITLE
+========================= */
+
+.product-title {
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+/* =========================
+   CART AREA
+========================= */
+
+#cartItems {
+    overflow-y: auto !important;
+    max-height: 60vh;
+}
+
+/* =========================
+   TOTAL AKHIR
+========================= */
+
+.total-gradient {
+    background: linear-gradient(135deg, #4f46e5, #8b5cf6) !important;
+    border-radius: 16px;
+    padding: 20px !important;
+    margin-top: 10px;
+
+    box-shadow: 0 15px 35px rgba(79,70,229,0.25);
+
+    position: relative;
+    overflow: hidden;
+
+    transition: all 0.25s ease;
+}
+
+.total-gradient::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top left, rgba(255,255,255,0.15), transparent 60%);
+}
+
+.total-gradient:hover {
+    transform: scale(1.02);
+}
+
+#totalPrice {
+    font-size: 36px !important;
+    font-weight: 800 !important;
+    color: #ffffff !important;
+}
+
+/* =========================
+   PAYMENT CARD
+========================= */
+
+.payment-input-section.bg-dark {
+    background: linear-gradient(135deg, #4f46e5, #6366f1) !important;
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(79,70,229,0.25);
+
+    position: relative;
+    overflow: hidden;
+}
+
+.payment-input-section * {
+    position: relative;
+    z-index: 10;
+}
+
+/* =========================
+   INPUT PAYMENT
+========================= */
+
+#paidAmount {
+    font-size: 28px;
+    font-weight: 800;
+    color: #ffffff !important;
+    background: transparent !important;
+}
+
+#changeAmount {
+    color: #ffffff !important;
+    font-weight: 700;
+}
+
+/* =========================
+   QUICK CASH
+========================= */
+
+.payment-input-section .quick-cash {
+    cursor: pointer !important;
+    position: relative;
+    z-index: 999;
+
+    background: rgba(255,255,255,0.2) !important;
+    border: 1px solid rgba(255,255,255,0.3) !important;
+
+    transition: all 0.2s ease;
+}
+
+.payment-input-section .quick-cash:hover {
+    background: #ffffff !important;
+    color: var(--primary) !important;
+    transform: translateY(-2px);
+}
+
+.payment-input-section .quick-cash:active {
+    transform: scale(0.95);
+}
+
+/* =========================
+   BUTTON
+========================= */
+
+button {
+    transition: all 0.2s ease !important;
+}
+
+button:hover {
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+#btnCheckout {
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    box-shadow: 0 10px 25px rgba(79,70,229,0.3);
+}
+
+/* =========================
+   TYPOGRAPHY
+========================= */
+
+h5, h6 {
+    font-weight: 600;
+}
+
+.small {
+    opacity: 0.7;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-height: 700px) {
+    #totalPrice {
+        font-size: 24px !important;
+    }
+}

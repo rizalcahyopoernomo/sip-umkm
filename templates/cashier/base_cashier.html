@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>
+        {% block title %}
+            Cashier POS - SIP UMKM
+        {% endblock %}
+    </title>
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+
+    <!-- ========================================= -->
+    <!-- BOOTSTRAP -->
+    <!-- ========================================= -->
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- ========================================= -->
+    <!-- FONT AWESOME -->
+    <!-- ========================================= -->
+
+    <link
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- ========================================= -->
+    <!-- GOOGLE FONT -->
+    <!-- ========================================= -->
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- ========================================= -->
+    <!-- POS CSS -->
+    <!-- ========================================= -->
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static',
+        filename='css/pos.css') }}"
+    >
+
+    <!-- ========================================= -->
+    <!-- EXTRA CSS -->
+    <!-- ========================================= -->
+
+    {% block extra_css %}{% endblock %}
+
+    <!-- ========================================= -->
+    <!-- INTERNAL STABILIZATION -->
+    <!-- ========================================= -->
+
+    <style>
+
+        :root {
+
+            --bg-main: #f5f7fb;
+
+            --text-main: #111827;
+
+            --text-muted: #6b7280;
+
+            --border-color: #e5e7eb;
+
+            --shadow-soft:
+                0 10px 30px rgba(0,0,0,0.06);
+
+            --radius-lg: 20px;
+
+            --transition:
+                all 0.2s ease;
+        }
+
+        * {
+
+            margin: 0;
+
+            padding: 0;
+
+            box-sizing: border-box;
+        }
+
+        html {
+
+            scroll-behavior: smooth;
+
+            overflow-x: hidden;
+        }
+
+        body {
+
+            font-family:
+                'Inter',
+                sans-serif;
+
+            background:
+                var(--bg-main);
+
+            color:
+                var(--text-main);
+
+            overflow-x: hidden;
+
+            -webkit-font-smoothing:
+                antialiased;
+        }
+
+        a {
+
+            text-decoration: none;
+        }
+
+        img {
+
+            max-width: 100%;
+
+            display: block;
+        }
+
+        /* =========================================
+           NAVBAR
+        ========================================= */
+
+        .cashier-navbar {
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 1050;
+
+            background:
+                rgba(255,255,255,0.92);
+
+            backdrop-filter:
+                blur(14px);
+
+            border-bottom:
+                1px solid rgba(229,231,235,0.8);
+
+            padding:
+                14px 24px;
+        }
+
+        .cashier-navbar-content {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 20px;
+        }
+
+        .cashier-brand {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+        }
+
+        .cashier-brand-icon {
+
+            width: 42px;
+
+            height: 42px;
+
+            border-radius: 14px;
+
+            background: #4f46e5;
+
+            color: white;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-weight: 800;
+
+            font-size: 1rem;
+
+            box-shadow:
+                0 10px 20px rgba(79,70,229,0.2);
+        }
+
+        .cashier-brand-text h5 {
+
+            margin: 0;
+
+            font-size: 1rem;
+
+            font-weight: 800;
+
+            color: #111827;
+        }
+
+        .cashier-brand-text span {
+
+            font-size: 0.82rem;
+
+            color: #6b7280;
+        }
+
+        /* =========================================
+           NAV ACTION
+        ========================================= */
+
+        .cashier-actions {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+        }
+
+        .cashier-user {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            background: white;
+
+            border:
+                1px solid #eef1f6;
+
+            border-radius: 16px;
+
+            padding:
+                8px 14px;
+
+            box-shadow:
+                var(--shadow-soft);
+        }
+
+        .cashier-user-avatar {
+
+            width: 38px;
+
+            height: 38px;
+
+            border-radius: 12px;
+
+            background: #111827;
+
+            color: white;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 0.9rem;
+        }
+
+        .cashier-user-info {
+
+            display: flex;
+
+            flex-direction: column;
+        }
+
+        .cashier-user-info strong {
+
+            font-size: 0.88rem;
+
+            color: #111827;
+        }
+
+        .cashier-user-info small {
+
+            font-size: 0.76rem;
+
+            color: #6b7280;
+        }
+
+        /* =========================================
+           LOGOUT BUTTON
+        ========================================= */
+
+        .logout-btn {
+
+            border: none;
+
+            background: #ef4444;
+
+            color: white;
+
+            border-radius: 14px;
+
+            padding:
+                10px 16px;
+
+            font-weight: 700;
+
+            transition:
+                var(--transition);
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+        }
+
+        .logout-btn:hover {
+
+            background: #dc2626;
+
+            transform: translateY(-2px);
+        }
+
+        /* =========================================
+           CONTENT
+        ========================================= */
+
+        .cashier-content {
+
+            width: 100%;
+
+            min-height: calc(100vh - 80px);
+
+            padding: 24px;
+        }
+
+        /* =========================================
+           RESPONSIVE
+        ========================================= */
+
+        @media (max-width: 768px) {
+
+            .cashier-navbar {
+
+                padding:
+                    14px 18px;
+            }
+
+            .cashier-content {
+
+                padding: 18px;
+            }
+
+            .cashier-user-info {
+
+                display: none;
+            }
+
+            .logout-btn span {
+
+                display: none;
+            }
+        }
+
+        @media (max-width: 576px) {
+
+            .cashier-navbar-content {
+
+                gap: 12px;
+            }
+
+            .cashier-brand-text span {
+
+                display: none;
+            }
+
+            .cashier-content {
+
+                padding: 14px;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- ========================================= -->
+    <!-- NAVBAR -->
+    <!-- ========================================= -->
+
+    <header class="cashier-navbar">
+
+        <div class="cashier-navbar-content">
+
+            <!-- BRAND -->
+
+            <div class="cashier-brand">
+
+                <div class="cashier-brand-icon">
+
+                    K
+
+                </div>
+
+                <div class="cashier-brand-text">
+
+                    <h5>
+                        SIP-UMKM POS
+                    </h5>
+
+                    <span>
+                        Retail Cashier System
+                    </span>
+
+                </div>
+
+            </div>
+
+            <!-- ACTION -->
+
+            <div class="cashier-actions">
+
+                <div class="cashier-user">
+
+                    <div class="cashier-user-avatar">
+
+                        <i class="fas fa-user"></i>
+
+                    </div>
+
+                    <div class="cashier-user-info">
+
+                        <strong>
+
+                            {{ current_user.username }}
+
+                        </strong>
+
+                        <small>
+                            Cashier
+                        </small>
+
+                    </div>
+
+                </div>
+
+                <a
+                    href="{{ url_for('auth.logout') }}"
+                    class="logout-btn">
+
+                    <i class="fas fa-sign-out-alt"></i>
+
+                    <span>
+                        Logout
+                    </span>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </header>
+
+    <!-- ========================================= -->
+    <!-- CONTENT -->
+    <!-- ========================================= -->
+
+    <main class="cashier-content">
+
+        {% block content %}{% endblock %}
+
+    </main>
+
+    <!-- ========================================= -->
+    <!-- BOOTSTRAP -->
+    <!-- ========================================= -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- ========================================= -->
+    <!-- EXTRA JS -->
+    <!-- ========================================= -->
+
+    {% block extra_js %}{% endblock %}
+
+</body>
+</html>

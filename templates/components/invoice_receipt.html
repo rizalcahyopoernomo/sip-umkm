@@ -1,0 +1,342 @@
+<link rel="stylesheet"
+      href="{{ url_for('static',
+      filename='css/invoice.css') }}">
+
+<div class="invoice-wrapper">
+
+    <!-- ========================= -->
+    <!-- HEADER -->
+    <!-- ========================= -->
+
+    <div class="invoice-brand">
+
+        <h2>
+            SIP-UMKM Retail
+        </h2>
+
+        <p>
+            Digital Retail Receipt
+        </p>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- TITLE -->
+    <!-- ========================= -->
+
+    <div class="invoice-title">
+
+        <h1>
+            INVOICE
+        </h1>
+
+        <span>
+            {{ summary.invoice_number }}
+        </span>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- INFO -->
+    <!-- ========================= -->
+
+    <div class="invoice-info">
+
+        <div class="invoice-info-row">
+
+            <div class="invoice-info-label">
+                Customer
+            </div>
+
+            <div class="invoice-info-value">
+                {{ summary.customer_name }}
+            </div>
+
+        </div>
+
+        <div class="invoice-info-row">
+
+            <div class="invoice-info-label">
+                Cashier
+            </div>
+
+            <div class="invoice-info-value">
+                {{ summary.cashier_name }}
+            </div>
+
+        </div>
+
+        <div class="invoice-info-row">
+
+            <div class="invoice-info-label">
+                Payment
+            </div>
+
+            <div class="invoice-info-value">
+                {{ summary.payment_method }}
+            </div>
+
+        </div>
+
+        <div class="invoice-info-row">
+
+            <div class="invoice-info-label">
+                Date
+            </div>
+
+            <div class="invoice-info-value">
+
+                {{ summary.timestamp.strftime("%d %B %Y") }}
+
+            </div>
+
+        </div>
+
+        <div class="invoice-info-row">
+
+            <div class="invoice-info-label">
+                Time
+            </div>
+
+            <div class="invoice-info-value">
+
+                {{ summary.timestamp.strftime("%H:%M WIB") }}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- DIVIDER -->
+    <!-- ========================= -->
+
+    <div class="invoice-divider"></div>
+
+    <!-- ========================= -->
+    <!-- TABLE -->
+    <!-- ========================= -->
+
+    <div class="invoice-table-wrapper">
+
+        <table class="invoice-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Product
+                    </th>
+
+                    <th class="qty">
+                        Qty
+                    </th>
+
+                    <th class="price">
+                        Total
+                    </th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% if invoice.items %}
+
+                    {% for item in invoice.items %}
+
+                    <tr>
+
+                        <td>
+
+                            <div class="fw-semibold">
+
+                                {{ item.product_name }}
+
+                            </div>
+
+                            <small class="text-muted">
+
+                                Rp {{ "{:,.0f}".format(
+                                    item.price_at_time
+                                ).replace(",", ".") }}
+
+                            </small>
+
+                        </td>
+
+                        <td class="qty">
+
+                            {{ item.qty }}
+
+                        </td>
+
+                        <td class="price">
+
+                            Rp {{ "{:,.0f}".format(
+                                item.subtotal
+                            ).replace(",", ".") }}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <tr>
+
+                        <td colspan="3"
+                            class="text-center py-4 text-muted">
+
+                            Tidak ada item transaksi
+
+                        </td>
+
+                    </tr>
+
+                {% endif %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- DIVIDER -->
+    <!-- ========================= -->
+
+    <div class="invoice-divider"></div>
+
+    <!-- ========================= -->
+    <!-- SUMMARY -->
+    <!-- ========================= -->
+
+    <div class="invoice-summary">
+
+        <div class="summary-row">
+
+            <span>
+                Subtotal
+            </span>
+
+            <span>
+
+                Rp {{ "{:,.0f}".format(
+                    summary.subtotal or 0
+                ).replace(",", ".") }}
+
+            </span>
+
+        </div>
+
+        <div class="summary-row">
+
+            <span>
+                Discount
+            </span>
+
+            <span>
+
+                Rp {{ "{:,.0f}".format(
+                    summary.discount or 0
+                ).replace(",", ".") }}
+
+            </span>
+
+        </div>
+
+        <div class="summary-total">
+
+            <span>
+                TOTAL
+            </span>
+
+            <span>
+
+                Rp {{ "{:,.0f}".format(
+                    summary.total_amount or 0
+                ).replace(",", ".") }}
+
+            </span>
+
+        </div>
+
+        <div class="summary-row mt-3">
+
+            <span>
+                Bayar
+            </span>
+
+            <span>
+
+                Rp {{ "{:,.0f}".format(
+                    summary.amount_paid or 0
+                ).replace(",", ".") }}
+
+            </span>
+
+        </div>
+
+        <div class="summary-row">
+
+            <span>
+                Kembalian
+            </span>
+
+            <span>
+
+                Rp {{ "{:,.0f}".format(
+                    summary.change_amount or 0
+                ).replace(",", ".") }}
+
+            </span>
+
+        </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- FOOTER -->
+    <!-- ========================= -->
+
+    <div class="invoice-footer">
+
+        <p class="mb-1">
+
+            Terima kasih telah berbelanja
+
+        </p>
+
+        <small>
+
+            SIP-UMKM Retail System
+
+        </small>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- ACTION BUTTON -->
+    <!-- ========================= -->
+
+    <div class="invoice-actions no-print">
+
+        <button
+            onclick="window.print()"
+            class="print-btn">
+
+            <i class="fas fa-print me-2"></i>
+
+            Print Receipt
+
+        </button>
+
+    </div>
+
+</div>

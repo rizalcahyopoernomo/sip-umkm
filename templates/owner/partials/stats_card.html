@@ -1,0 +1,41 @@
+<div class="col-xl-3 col-md-6">
+
+    <div class="stat-card {{ bg_color }} shadow-sm rounded-4 border-0 h-100">
+
+        <div class="card-body">
+
+            <!-- ========================= -->
+            <!-- KPI TITLE -->
+            <!-- ========================= -->
+
+            <div class="stats-title text-white">
+
+                {{ title }}
+
+            </div>
+
+            <!-- ========================= -->
+            <!-- KPI VALUE -->
+            <!-- ========================= -->
+
+            <div class="stats-value text-white">
+
+                {% if is_currency %}
+
+                    <small>Rp</small>
+
+                    {{ "{:,.0f}".format(value or 0).replace(",", ".") }}
+
+                {% else %}
+
+                    {{ value }}
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

@@ -1,0 +1,873 @@
+﻿{% extends "owner/base_owner.html" %}
+
+{% block content %}
+<div class="dashboard-content">
+
+    <!-- ========================================= -->
+    <!-- PAGE HEADER -->
+    <!-- ========================================= -->
+
+    <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+
+        <div>
+
+            <h3 class="fw-bold mb-1">
+                Dashboard Analytics
+            </h3>
+
+            <small class="text-muted">
+                Intelligent retail monitoring &amp; business insight
+            </small>
+
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+
+            <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill">
+                Realtime Dashboard
+            </span>
+
+        </div>
+
+    </div>
+
+    <!-- ========================================= -->
+    <!-- KPI SECTION -->
+    <!-- ========================================= -->
+
+    <div class="section-divider">
+        <span class="section-label">
+            Business Performance
+        </span>
+    </div>
+
+    <!-- KPI BARIS 1 -->
+
+    <div class="row g-4 mb-4">
+
+        {% set title="Total Transaksi" %}
+        {% set value=total_transaksi %}
+        {% set bg_color="bg-primary" %}
+        {% set text_color="text-white" %}
+        {% set is_currency=False %}
+        {% include 'owner/partials/stats_card.html' %}
+
+        {% set title="Total Produk" %}
+        {% set value=total_produk %}
+        {% set bg_color="bg-success" %}
+        {% set text_color="text-white" %}
+        {% set is_currency=False %}
+        {% include 'owner/partials/stats_card.html' %}
+
+        {% set title="Total Pelanggan" %}
+        {% set value=total_customer %}
+        {% set bg_color="bg-warning" %}
+        {% set text_color="text-white" %}
+        {% set is_currency=False %}
+        {% include 'owner/partials/stats_card.html' %}
+
+        {% set title="Jam Padat" %}
+        {% set value=peak_hour %}
+        {% set bg_color="bg-danger" %}
+        {% set text_color="text-white" %}
+        {% set is_currency=False %}
+        {% include 'owner/partials/stats_card.html' %}
+
+    </div>
+
+    <!-- KPI BARIS 2 -->
+
+    <div class="row g-4 mb-5">
+
+        {% set title="Omzet Hari Ini" %}
+        {% set value=revenue_today %}
+        {% set bg_color="bg-dark" %}
+        {% set text_color="text-white" %}
+        {% set is_currency=True %}
+        {% include 'owner/partials/stats_card.html' %}
+
+        {% set title="Omzet Bulan Ini" %}
+        {% set value=revenue_month %}
+        {% set bg_color="bg-info" %}
+        {% set text_color="text-white" %}
+        {% set is_currency=True %}
+        {% include 'owner/partials/stats_card.html' %}
+
+        {% set title="Laba Hari Ini" %}
+        {% set value=profit_today %}
+        {% set bg_color="bg-success" %}
+        {% set text_color="text-white" %}
+        {% set is_currency=True %}
+        {% include 'owner/partials/stats_card.html' %}
+
+        {% set title="Laba Bulan Ini" %}
+        {% set value=profit_month %}
+        {% set bg_color="bg-warning" %}
+        {% set text_color="text-white" %}
+        {% set is_currency=True %}
+        {% include 'owner/partials/stats_card.html' %}
+
+    </div>
+
+    <!-- ========================================= -->
+    <!-- DSS SECTION -->
+    <!-- ========================================= -->
+
+    <div class="section-divider mb-3">
+        <span class="section-label">
+            Smart Stock Management
+        </span>
+    </div>
+
+    <div class="card mb-5">
+
+        <div class="card-body p-4">
+
+            <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+
+                <div>
+
+                    <h5 class="fw-bold mb-1">
+                        DSS Insights
+                    </h5>
+
+                    <small class="text-muted">
+                        Analisis stok kritis, prioritas pengadaan, dan monitoring inventory
+                    </small>
+
+                </div>
+
+                <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill">
+                    Smart Recommendation
+                </span>
+
+            </div>
+
+            <div class="row g-4">
+
+                {% set critical = dss_depletion | selectattr("status","equalto","CRITICAL") | list %}
+                {% set warning  = dss_depletion | selectattr("status","equalto","WARNING")  | list %}
+
+                <!-- CRITICAL -->
+
+                <div class="col-lg-4">
+
+                    <div class="dss-panel dss-gradient-danger h-100">
+
+                        <div>
+
+                            <div class="d-flex align-items-center gap-2 mb-4">
+
+                                <span class="fs-4">🔴</span>
+
+                                <h5 class="mb-0 text-white">Critical</h5>
+
+                                <span class="badge bg-white text-danger ms-auto">
+                                    {{ critical | length }}
+                                </span>
+
+                            </div>
+
+                            {% if critical %}
+
+                                {% for item in critical[:3] %}
+
+                                    {% set percent = [((item.days_left or 0) / 30 * 100) | round(0) | int, 100] | min %}
+
+                                    <div class="dss-item mb-4">
+
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+
+                                            <span class="fw-semibold text-white dss-item-name">
+                                                {{ item.name }}
+                                            </span>
+
+                                            <span class="dss-days-badge dss-days-critical">
+                                                {{ item.days_left | round(1) }}h
+                                            </span>
+
+                                        </div>
+
+                                        <div class="progress dss-track mb-1">
+                                            <div
+                                                class="progress-bar dss-bar"
+                                                data-width="{{ percent }}"
+                                                role="progressbar"
+                                                aria-valuenow="{{ percent }}"
+                                                aria-valuemin="0"
+                                                aria-valuemax="100">
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex justify-content-between">
+                                            <small class="text-white-50">sisa stok</small>
+                                            <small class="text-white fw-bold">{{ percent }}%</small>
+                                        </div>
+
+                                    </div>
+
+                                {% endfor %}
+
+                            {% else %}
+
+                                <div class="text-center py-5">
+                                    <div class="mb-2" style="font-size:2.5rem;">✅</div>
+                                    <small class="text-white">Tidak ada stok kritis</small>
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                        {% if critical | length > 3 %}
+                        <div class="dss-more-badge mt-2">
+                            +{{ critical | length - 3 }} item lainnya
+                        </div>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+                <!-- WARNING -->
+
+                <div class="col-lg-4">
+
+                    <div class="dss-panel dss-gradient-warning h-100">
+
+                        <div>
+
+                            <div class="d-flex align-items-center gap-2 mb-4">
+
+                                <span class="fs-4">🟠</span>
+
+                                <h5 class="mb-0 text-white">Warning</h5>
+
+                                <span class="badge bg-white text-warning ms-auto">
+                                    {{ warning | length }}
+                                </span>
+
+                            </div>
+
+                            {% if warning %}
+
+                                {% for item in warning[:3] %}
+
+                                    {% set percent = [((item.days_left or 0) / 30 * 100) | round(0) | int, 100] | min %}
+
+                                    <div class="dss-item mb-4">
+
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+
+                                            <span class="fw-semibold text-white dss-item-name">
+                                                {{ item.name }}
+                                            </span>
+
+                                            <span class="dss-days-badge dss-days-warning">
+                                                {{ item.days_left | round(1) }}h
+                                            </span>
+
+                                        </div>
+
+                                        <div class="progress dss-track mb-1">
+                                            <div
+                                                class="progress-bar dss-bar"
+                                                data-width="{{ percent }}"
+                                                role="progressbar"
+                                                aria-valuenow="{{ percent }}"
+                                                aria-valuemin="0"
+                                                aria-valuemax="100">
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex justify-content-between">
+                                            <small class="text-white-50">sisa stok</small>
+                                            <small class="text-white fw-bold">{{ percent }}%</small>
+                                        </div>
+
+                                    </div>
+
+                                {% endfor %}
+
+                            {% else %}
+
+                                <div class="text-center py-5">
+                                    <div class="mb-2" style="font-size:2.5rem;">📦</div>
+                                    <small class="text-white">Tidak ada warning stok</small>
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                        {% if warning | length > 3 %}
+                        <div class="dss-more-badge mt-2">
+                            +{{ warning | length - 3 }} item lainnya
+                        </div>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+                <!-- PRIORITY -->
+
+                <div class="col-lg-4">
+
+                    <div class="dss-panel dss-gradient-primary h-100">
+
+                        <div>
+
+                            <div class="d-flex align-items-center gap-2 mb-4">
+
+                                <span class="fs-4">🟣</span>
+
+                                <h5 class="mb-0 text-white">Priority</h5>
+
+                                <span class="badge bg-white text-primary ms-auto">
+                                    Top 3
+                                </span>
+
+                            </div>
+
+                            {% if dss_priority %}
+
+                                {% set max_val = dss_priority[0].priority_score %}
+                                {% set max_val = max_val if max_val > 0 else 1 %}
+
+                                {% for item in dss_priority[:3] %}
+
+                                    {% set percent = (item.priority_score / max_val * 100) | round(0) | int %}
+                                    {% set percent = [percent, 100] | min %}
+
+                                    <div class="dss-item mb-4">
+
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+
+                                            <span class="fw-semibold text-white dss-item-name">
+                                                {{ item.name }}
+                                            </span>
+
+                                            <span class="dss-days-badge dss-days-priority">
+                                                {{ item.priority_score | round(0) | int }}
+                                            </span>
+
+                                        </div>
+
+                                        <div class="progress dss-track mb-1">
+                                            <div
+                                                class="progress-bar dss-bar"
+                                                data-width="{{ percent }}"
+                                                role="progressbar"
+                                                aria-valuenow="{{ percent }}"
+                                                aria-valuemin="0"
+                                                aria-valuemax="100">
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex justify-content-between">
+                                            <small class="text-white-50">priority score</small>
+                                            <small class="text-white fw-bold">{{ percent }}%</small>
+                                        </div>
+
+                                    </div>
+
+                                {% endfor %}
+
+                            {% else %}
+
+                                <div class="text-center py-5">
+                                    <div class="mb-2" style="font-size:2.5rem;">📊</div>
+                                    <small class="text-white">Belum ada data prioritas</small>
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ========================================= -->
+    <!-- EXECUTIVE INSIGHT -->
+    <!-- ========================================= -->
+
+    <div class="section-divider mb-3">
+        <span class="section-label">
+            Executive Business Insight
+        </span>
+    </div>
+
+    <div class="card mb-5">
+
+        <div class="card-body p-4">
+
+            <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+
+                <div>
+
+                    <h5 class="fw-bold mb-1">
+                        Executive Insight
+                    </h5>
+
+                    <small class="text-muted">
+                        AI-generated business conclusion
+                    </small>
+
+                </div>
+
+                <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill">
+                    AI Insight
+                </span>
+
+            </div>
+
+            {% if executive_insight %}
+
+                <div class="d-flex flex-column gap-3">
+
+                    {% for item in executive_insight %}
+
+                    <div class="executive-item">
+
+                        <div class="executive-icon">
+                            {{ item.icon }}
+                        </div>
+
+                        <div class="executive-content">
+
+                            <div class="executive-title">
+                                Executive Insight
+                            </div>
+
+                            <div class="executive-message">
+                                {{ item.message }}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="executive-empty">
+                    <div style="font-size:3rem;">🤖</div>
+                    <p class="mt-3">Tidak ada executive insight tersedia</p>
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <!-- ========================================= -->
+    <!-- ABC CLASSIFICATION -->
+    <!-- ========================================= -->
+
+    <div class="section-divider mb-3">
+        <span class="section-label">
+            ABC Inventory Classification
+        </span>
+    </div>
+
+    <div class="card mb-5">
+
+        <div class="card-body p-4">
+
+            <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+
+                <div>
+
+                    <h5 class="fw-bold mb-1">
+                        ABC Classification
+                    </h5>
+
+                    <small class="text-muted">
+                        Klasifikasi kontribusi revenue produk
+                    </small>
+
+                </div>
+
+                <div class="d-flex gap-2">
+
+                    <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">
+                        A: {{ abc_summary.A }}
+                    </span>
+
+                    <span class="badge bg-warning-subtle text-warning px-3 py-2 rounded-pill">
+                        B: {{ abc_summary.B }}
+                    </span>
+
+                    <span class="badge bg-secondary-subtle text-secondary px-3 py-2 rounded-pill">
+                        C: {{ abc_summary.C }}
+                    </span>
+
+                </div>
+
+            </div>
+
+            {% if abc_data %}
+
+                <div class="table-responsive">
+
+                    <table class="table align-middle abc-table">
+
+                        <thead>
+                            <tr>
+                                <th>Produk</th>
+                                <th>Revenue</th>
+                                <th>Contribution</th>
+                                <th>Cumulative</th>
+                                <th>Class</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {% for item in abc_data[:10] %}
+
+                            <tr>
+
+                                <td class="fw-semibold">
+                                    {{ item.name }}
+                                </td>
+
+                                <td>
+                                    Rp {{ "{:,.0f}".format(item.revenue).replace(",", ".") }}
+                                </td>
+
+                                <td>
+                                    {{ item.contribution_pct }}%
+                                </td>
+
+                                <td>
+                                    {{ item.cumulative_pct }}%
+                                </td>
+
+                                <td>
+
+                                    {% if item.class == "A" %}
+                                    <span class="badge abc-badge abc-a rounded-pill px-3 py-2">
+                                        CLASS A
+                                    </span>
+                                    {% elif item.class == "B" %}
+                                    <span class="badge abc-badge abc-b rounded-pill px-3 py-2">
+                                        CLASS B
+                                    </span>
+                                    {% else %}
+                                    <span class="badge abc-badge abc-c rounded-pill px-3 py-2">
+                                        CLASS C
+                                    </span>
+                                    {% endif %}
+
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            {% else %}
+
+                <div class="executive-empty">
+                    <div style="font-size:3rem;">📦</div>
+                    <p class="mt-3">Belum ada data ABC classification</p>
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <!-- ========================================= -->
+    <!-- FORECAST -->
+    <!-- ========================================= -->
+
+    <div class="section-divider mb-3">
+        <span class="section-label">
+            AI Prediction Engine
+        </span>
+    </div>
+
+    <div class="card mb-5">
+
+        <div class="card-body p-4">
+
+            <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+
+                <div>
+
+                    <h5 class="fw-bold mb-1">
+                        Forecast Insight
+                    </h5>
+
+                    <small class="text-muted">
+                        Prediksi permintaan produk 7 hari ke depan
+                    </small>
+
+                </div>
+
+                <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill">
+                    AI Prediction
+                </span>
+
+            </div>
+
+            {% if forecast_insight %}
+
+                <div class="forecast-list">
+
+                    {% for item in forecast_insight[:5] %}
+
+                        {% if item.type == "high_demand" %}
+                            {% set cls  = "high" %}
+                            {% set icon = "📈" %}
+                        {% elif item.type == "low_demand" %}
+                            {% set cls  = "low" %}
+                            {% set icon = "📉" %}
+                        {% else %}
+                            {% set cls  = "stable" %}
+                            {% set icon = "➡️" %}
+                        {% endif %}
+
+                        <div class="forecast-item {{ cls }}">
+
+                            <div class="forecast-icon">
+                                {{ icon }}
+                            </div>
+
+                            <div class="flex-grow-1">
+
+                                <div class="fw-semibold">
+                                    {{ item.message }}
+                                </div>
+
+                            </div>
+
+                            <span class="badge bg-light text-dark">
+                                {{ item.type | replace("_"," ") }}
+                            </span>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="executive-empty">
+                    <div style="font-size:3rem;">📊</div>
+                    <p class="mt-3">Belum ada data forecast tersedia</p>
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <!-- ========================================= -->
+    <!-- ANALYTICS -->
+    <!-- ========================================= -->
+
+    <div class="section-divider mb-3">
+        <span class="section-label">
+            Operational Analytics
+        </span>
+    </div>
+
+    <div class="row g-4">
+
+        <!-- STOCK WARNING -->
+
+        <div class="col-xl-5">
+
+            <div class="card h-100">
+
+                <div class="card-body p-4">
+
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+
+                        <div>
+
+                            <h5 class="fw-bold mb-1">
+                                ⚠️ Peringatan Stok
+                            </h5>
+
+                            <small class="text-muted">
+                                Monitoring stok minimum produk
+                            </small>
+
+                        </div>
+
+                        {% if low_stock %}
+                        <span class="badge bg-danger rounded-pill">
+                            {{ low_stock | length }} item
+                        </span>
+                        {% endif %}
+
+                    </div>
+
+                    {% if low_stock %}
+
+                        <div class="d-flex flex-column gap-2">
+
+                            {% for item in low_stock[:6] %}
+
+                            <div class="stock-card d-flex justify-content-between align-items-center">
+
+                                <div class="d-flex align-items-center gap-2">
+
+                                    <span style="color:#ef4444;">⚠</span>
+
+                                    <span class="fw-semibold">
+                                        {{ item.name }}
+                                    </span>
+
+                                </div>
+
+                                <span class="badge bg-danger rounded-pill">
+                                    {{ item.stock }} unit
+                                </span>
+
+                            </div>
+
+                            {% endfor %}
+
+                        </div>
+
+                    {% else %}
+
+                        <div class="executive-empty">
+                            <div style="font-size:2.8rem;">✅</div>
+                            <p class="mt-3">Semua stok dalam kondisi aman</p>
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- CHARTS -->
+
+        <div class="col-xl-7">
+
+            <!-- TOTAL REVENUE -->
+
+            <div class="card mb-4">
+
+                <div class="card-body p-4 d-flex justify-content-between align-items-center">
+
+                    <div>
+
+                        <small class="text-muted">
+                            Total Omzet Keseluruhan
+                        </small>
+
+                        <h2 class="fw-bold text-primary mt-2 mb-0">
+                            {{ revenue_all | rupiah }}
+                        </h2>
+
+                    </div>
+
+                    <div style="font-size:2.8rem;opacity:0.12;">
+                        💰
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- TREND CHART -->
+
+            <div class="chart-card mb-4">
+
+                <div class="card-body">
+
+                    <div class="d-flex flex-column align-items-center text-center mb-4">
+
+                        <h5 class="fw-bold mb-1 text-white">
+                            Tren 7 Hari
+                        </h5>
+
+                        <small class="text-white-50">
+                            Monitoring omzet harian
+                        </small>
+
+                    </div>
+
+                    <div class="chart-container">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- PARETO CHART -->
+
+            <div class="chart-card">
+
+                <div class="card-body">
+
+                    <div class="d-flex flex-column align-items-center text-center mb-4">
+
+                        <h5 class="fw-bold mb-1 text-white">
+                            Pareto Analysis
+                        </h5>
+
+                        <small class="text-white-50">
+                            Kontribusi revenue produk
+                        </small>
+
+                    </div>
+
+                    <div class="chart-container">
+                        <canvas id="paretoChart"></canvas>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ========================================= -->
+<!-- CHART DATA -->
+<!-- ========================================= -->
+
+<script id="chart-data" type="application/json">
+{
+    "labels": {{ chart_labels | tojson }},
+    "values": {{ chart_values | tojson }},
+    "pareto": {{ dss_pareto | tojson }}
+}
+</script>
+
+{% endblock %}
