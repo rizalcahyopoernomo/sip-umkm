@@ -403,6 +403,10 @@ def inventory():
             'low_stock'
         )
 
+        sort = request.args.get(
+            'sort'
+        )
+
         from models.entities import Category
 
         categories = Category.query.all()
@@ -419,6 +423,20 @@ def inventory():
             products = (
                 OwnerService
                 .get_low_stock_products()
+            )
+
+        elif sort == 'stock_asc':
+
+            products = (
+                OwnerService
+                .get_inventory_sorted_low_stock()
+            )
+
+        elif sort == 'stock_desc':
+
+            products = (
+                OwnerService
+                .get_inventory_sorted_high_stock()
             )
 
         else:
@@ -462,7 +480,9 @@ def inventory():
 
             total_value=total_value,
 
-            dss_map=dss_map
+            dss_map=dss_map,
+
+            sort=sort
         )
 
     except Exception as error:
@@ -1012,22 +1032,42 @@ def reports():
         start_date, end_date = (
             parse_date_range(
 
-                request.args.get(
-                    'start_date'
-                ),
-
-                request.args.get(
-                    'end_date'
-                )
+                request.args.get('start_date'),
+                request.args.get('end_date')
             )
         )
+
+        today = date.today()
+
+        # ==========================
+        # VALIDASI TANGGAL
+        # ==========================
+        if start_date > end_date:
+
+            flash(
+                "Tanggal mulai tidak boleh melebihi tanggal akhir.",
+                "warning"
+            )
+
+            return redirect(
+                url_for("owner.reports")
+            )
+
+        if end_date > today:
+
+            flash(
+                "Laporan tidak dapat dibuat untuk tanggal setelah hari ini.",
+                "warning"
+            )
+
+            return redirect(
+                url_for("owner.reports")
+            )
 
         summary = (
             ReportService
             .get_report_summary(
-
                 start_date,
-
                 end_date
             )
         )
@@ -1035,9 +1075,7 @@ def reports():
         top_products = (
             ReportService
             .get_top_products(
-
                 start_date,
-
                 end_date
             )
         )
@@ -1045,9 +1083,7 @@ def reports():
         payment_methods = (
             ReportService
             .get_payment_methods(
-
                 start_date,
-
                 end_date
             )
         )
@@ -1055,9 +1091,7 @@ def reports():
         transactions = (
             ReportService
             .get_transactions(
-
                 start_date,
-
                 end_date
             )
         )
@@ -1109,7 +1143,9 @@ def reports():
                 payment_methods,
 
             transactions=
-                transactions
+                transactions,
+
+            today=today.isoformat()
         )
 
     except Exception as error:
@@ -1128,8 +1164,6 @@ def reports():
         return redirect(
             url_for('owner.dashboard')
         )
-
-
 # =========================================
 # EXPORT CSV
 # =========================================

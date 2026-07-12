@@ -12,8 +12,14 @@ from flask_login import (
     login_required,
     current_user
 )
-
 from werkzeug.utils import secure_filename
+
+from sqlalchemy import func
+
+from datetime import (
+    datetime,
+    time
+)
 
 from models.entities import (
     db,
@@ -94,6 +100,8 @@ def pos():
             f'POS ACCESS | '
             f'CASHIER: {current_user.username}'
         )
+
+        
 
         return render_template(
 
@@ -783,14 +791,114 @@ def profile():
                 url_for('cashier.profile')
             )
 
+        # =========================
+        # DASHBOARD SUMMARY
+        # =========================
+        today = datetime.now().date()
+
+        start_today = datetime.combine(
+            today,
+            time.min
+        )
+
+        end_today = datetime.combine(
+            today,
+            time.max
+        )
+
+        # Modal barang berdasarkan harga modal
+        modal_barang = (
+
+            db.session.query(
+
+                func.sum(
+
+                    Product.cost *
+                    Product.stock
+
+                )
+
+            )
+
+            .filter(
+
+                Product.is_active == True
+
+            )
+
+            .scalar()
+
+            or 0
+        )
+
+        # Uang masuk hari ini
+        uang_masuk_hari_ini = (
+
+            db.session.query(
+
+                func.sum(
+
+                    Transaction.total_amount
+
+                )
+
+            )
+
+            .filter(
+
+                Transaction.timestamp >= start_today,
+
+                Transaction.timestamp <= end_today
+
+            )
+
+            .scalar()
+
+            or 0
+        )
+        
+        # Jumlah transaksi hari ini
+        jumlah_transaksi_hari_ini = (
+
+            db.session.query(
+
+                func.count(
+
+                    Transaction.id
+
+                )
+
+            )
+
+            .filter(
+
+                Transaction.timestamp >= start_today,
+
+                Transaction.timestamp <= end_today
+
+            )
+
+            .scalar()
+
+            or 0
+        )
+
         logger.info(
 
             f'PROFILE ACCESS | '
             f'USER: {current_user.username}'
         )
-
+        
         return render_template(
-            'cashier/profile.html'
+
+        'cashier/profile.html',
+
+        modal_barang=modal_barang,
+
+        uang_masuk_hari_ini=uang_masuk_hari_ini,
+
+        jumlah_transaksi_hari_ini=
+            jumlah_transaksi_hari_ini
         )
 
     except Exception as error:

@@ -256,7 +256,7 @@
 
             <div class="row g-4 mb-4">
 
-                <!-- TRANSACTION TODAY -->
+                <!-- TRANSACTION TODAY - MODAL BARANG -->
 
                 <div class="col-md-6">
 
@@ -270,18 +270,13 @@
 
                                     <small class="text-muted fw-semibold">
 
-                                        TRANSAKSI HARI INI
+                                        MODAL BARANG
 
                                     </small>
 
-                                    <h3 class="fw-bold mt-2 mb-0">
+                                    <h3 class="fw-bold mt-2 mb-0 text-primary">
 
-                                        {{ current_user.transactions
-                                            | selectattr(
-                                                'timestamp'
-                                            )
-                                            | list
-                                            | length }}
+                                        {{ modal_barang | rupiah }}
 
                                     </h3>
 
@@ -307,7 +302,7 @@
 
                 </div>
 
-                <!-- OMZET -->
+                <!-- OMZET - UANG MASUK HARI INI -->
 
                 <div class="col-md-6">
 
@@ -321,15 +316,15 @@
 
                                     <small class="text-muted fw-semibold">
 
-                                        STATUS SESSION
+                                        UANG MASUK HARI INI
 
                                     </small>
 
-                                    <h5 class="fw-bold mt-2 mb-0 text-success">
+                                    <h3 class="fw-bold mt-2 mb-0 text-success">
 
-                                        Aktif & Aman
+                                        {{ uang_masuk_hari_ini | rupiah }}
 
-                                    </h5>
+                                    </h3>
 
                                 </div>
 
@@ -342,6 +337,52 @@
                                 >
 
                                     <i class="fas fa-shield-check fs-5"></i>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- TRANSAKSI HARI INI - NEW CARD -->
+
+                <div class="col-md-6">
+
+                    <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                        <div class="card-body p-4">
+
+                            <div class="d-flex justify-content-between align-items-center">
+
+                                <div>
+
+                                    <small class="text-muted fw-semibold">
+
+                                        TRANSAKSI HARI INI
+
+                                    </small>
+
+                                    <h3 class="fw-bold mt-2 mb-0 text-dark">
+
+                                        {{ jumlah_transaksi_hari_ini }}
+
+                                    </h3>
+
+                                </div>
+
+                                <div
+                                    class="bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center"
+                                    style="
+                                        width: 55px;
+                                        height: 55px;
+                                    "
+                                >
+
+                                    <i class="fas fa-receipt fs-5"></i>
 
                                 </div>
 

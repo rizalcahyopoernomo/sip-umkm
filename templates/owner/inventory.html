@@ -1,4 +1,4 @@
-{% extends "owner/base_owner.html" %}
+{% extends "owner/base_owner.html" %} 
 
 {% block content %}
 <div class="inventory-section">
@@ -41,11 +41,35 @@
                 placeholder="Cari produk..."
                 value="{{ request.args.get('q','') }}">
 
+            <select
+                name="sort"
+                class="form-select"
+                style="max-width:220px;">
+
+                <option value="">
+                    Sort by Stock
+                </option>
+
+                <option
+                    value="stock_asc"
+                    {% if sort == "stock_asc" %}selected{% endif %}>
+                    Lowest Stock
+                </option>
+
+                <option
+                    value="stock_desc"
+                    {% if sort == "stock_desc" %}selected{% endif %}>
+                    Highest Stock
+                </option>
+
+            </select>
+
             <button
                 type="submit"
                 class="btn btn-primary">
 
                 Cari
+
             </button>
 
             <a
@@ -53,6 +77,7 @@
                 class="btn btn-secondary">
 
                 Reset
+
             </a>
 
         </form>
@@ -62,6 +87,7 @@
             class="btn btn-danger">
 
             Low Stock
+
         </a>
 
     </div>
@@ -776,4 +802,4 @@ function setAdjustData(id, name) {
 
 </script>
 
-{% endblock %}
+{% endblock %}gi

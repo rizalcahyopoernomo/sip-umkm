@@ -44,6 +44,38 @@ class OwnerService:
             return []
 
     # =========================
+    # SORT STOCK ASC
+    # =========================
+    @staticmethod
+    def get_inventory_sorted_low_stock():
+        try:
+            return Product.query.filter_by(
+                is_active=True
+            ).order_by(
+                Product.stock.asc(),
+                Product.name.asc()
+            ).all()
+
+        except Exception:
+            return []
+
+    # =========================
+    # SORT STOCK DESC
+    # =========================
+    @staticmethod
+    def get_inventory_sorted_high_stock():
+        try:
+            return Product.query.filter_by(
+                is_active=True
+            ).order_by(
+                Product.stock.desc(),
+                Product.name.asc()
+            ).all()
+
+        except Exception:
+            return []
+
+    # =========================
     # TOTAL INVENTORY VALUE
     # =========================
     @staticmethod
